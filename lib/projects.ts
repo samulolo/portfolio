@@ -17,13 +17,13 @@ export const projectSections: ProjectSection[] = [
       {
         id: "kutanga",
         title: "Kutanga",
-        description: "Marketplace em Angola para encontrar técnicos prestadores de serviço.",
+        description: "Marketplace mobile-first em Angola que conecta clientes a técnicos prestadores de serviço verificados, com contacto direto por chat ou WhatsApp. Cadastro e uso são gratuitos, sem comissão da plataforma — o pagamento é feito diretamente entre cliente e técnico, e o contacto direto por WhatsApp é liberado após o técnico concluir 10 serviços. Já opera em Luanda, Huambo e Benguela, com planos de expansão para outras províncias.",
         technologies: ["nextjs", "firebase"],
       },
       {
         id: "kukalakala",
         title: "Kukalakala",
-        description: "Plataforma de recrutamento que utiliza IA para encontrar o melhor candidato para uma vaga e aconselha o candidato com dicas de melhoria no currículo.",
+        description: "Plataforma de recrutamento que usa IA para conectar candidatos a vagas em Angola. O fluxo vai da candidatura à análise de compatibilidade por IA, passa por mensagens diretas entre candidato e empresa, agendamento de entrevista e decisão final. Além do score de compatibilidade, o candidato recebe feedback com pontos fortes, pontos a melhorar e recomendações práticas para o currículo.",
         technologies: ["nextjs", "supabase", "tailwind"],
       },
     ],
