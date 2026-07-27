@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from "react"
-import Link from "next/link"
 import ProjectCard from "@/components/ui/ProjectCard"
 import ReadItemModal from "@/components/ReadItemModal"
 import { posts } from "@/lib/posts"
@@ -28,26 +27,23 @@ export default function BlogPage(){
             <section className="px-4 relative">
                 <h4 className="p-2 font-semibold text-xl">Posts</h4>
 
-                <Link
-                    href="/blog/mdx-example"
-                    className="block mx-2 mb-2 p-3 rounded-xl border border-dashed border-[#4169E1]/40 bg-[#4169E1]/5 text-sm text-[#4169E1] font-medium"
-                >
-                    Exemplo: post escrito em MDX →
-                </Link>
-
-                {posts.map((post) => (
-                    <ProjectCard
-                        key={post.id}
-                        title={post.title}
-                        technologies={[]}
-                        description={post.description}
-                        date={post.date}
-                        onClick={() => {
-                            setPostSelected(post.id)
-                            handleToggleModal()
-                        }}
-                    />
-                ))}
+                {posts.length === 0 ? (
+                    <p className="p-2 text-gray-500">Sem posts disponíveis</p>
+                ) : (
+                    posts.map((post) => (
+                        <ProjectCard
+                            key={post.id}
+                            title={post.title}
+                            technologies={[]}
+                            description={post.description}
+                            date={post.date}
+                            onClick={() => {
+                                setPostSelected(post.id)
+                                handleToggleModal()
+                            }}
+                        />
+                    ))
+                )}
 
                 <div
                     className={`fixed inset-0 z-50 w-full h-dvh bg-black/75 transition-opacity duration-300 ease-in-out ${
