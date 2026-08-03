@@ -98,7 +98,9 @@ ${fence}
 
 Esse código é uma versão simplória de um algoritmo de ATS. Como se pode ver, ele busca apenas a coincidência de palavras presentes nos dois lados — ou seja, se o candidato errar no texto, mesmo tendo experiência real com as habilidades exigidas pela vaga, ele acaba tendo um score baixo, porque a correspondência de palavras não olha o contexto, só a correspondência exata.
 
-Por exemplo: o algoritmo acima não entende, e nunca vai entender, que se uma vaga pede FastAPI e o candidato tem no currículo "fastapi" e "python", os dois fazem parte do mesmo ecossistema — o que acaba pesando negativamente contra o candidato.`;
+Por exemplo: o algoritmo acima não entende, e nunca vai entender, que se uma vaga pede FastAPI e o candidato tem no currículo "fastapi" e "python", os dois fazem parte do mesmo ecossistema — o que acaba pesando negativamente contra o candidato.
+
+É aqui que entra o Processamento de Linguagem Natural (PLN): em vez de comparar strings, a ideia é entender o significado por trás dos termos — reconhecer que "FastAPI" e "Python" pertencem ao mesmo ecossistema, mesmo sem uma correspondência exata de texto. Como isso funciona na prática é assunto pra um próximo post.`;
 
 export const posts: Post[] = [
   {
