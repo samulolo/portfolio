@@ -8,34 +8,19 @@ export type Post = {
   description: string;
   date: string;
   author?: string;
-  content?: ContentBlock[];
+  content?: string;
 };
 
-export const posts: Post[] = [
-  {
-    id: "ats-antigos",
-    title: "Por que os ATS antigos falham na triagem de candidatos",
-    description:
-      "Como os sistemas antigos de triagem de currículos (ATS) comparam texto de forma literal — e por que isso penaliza bons candidatos mesmo quando o histórico é compatível com a vaga.",
-    date: "2026-08-03",
-    author: "Eliseu Samulolo",
-    content: [
-      {
-        type: "paragraph",
-        text: "Os sistemas antigos de ATS falham bastante naquilo que é a triagem do candidato: a análise de compatibilidade entre a vaga e o currículo é feita através da comparação direta entre os requisitos da vaga e o conteúdo do currículo do candidato.",
-      },
-      {
-        type: "paragraph",
-        text: "Quando a busca é por correspondência exata entre o texto do currículo e os requisitos da vaga, o candidato acaba penalizado — o resultado fica refém do texto do currículo estar escrito exatamente como o recrutador definiu.",
-      },
-      {
-        type: "paragraph",
-        text: "Um exemplo de código muito próximo daquilo que os algoritmos de ATS antigos fazem é o seguinte. Dado um conjunto de dados que representa os requisitos de uma vaga e os dados do candidato, temos o seguinte algoritmo:",
-      },
-      {
-        type: "code",
-        language: "python",
-        code: `def extract_skills(data: list) -> set:
+const fence = "```";
+
+const atsAntigosBody = `Os sistemas antigos de ATS falham bastante naquilo que é a triagem do candidato: a análise de compatibilidade entre a vaga e o currículo é feita através da comparação direta entre os requisitos da vaga e o conteúdo do currículo do candidato.
+
+Quando a busca é por correspondência exata entre o texto do currículo e os requisitos da vaga, o candidato acaba penalizado — o resultado fica refém do texto do currículo estar escrito exatamente como o recrutador definiu.
+
+Um exemplo de código muito próximo daquilo que os algoritmos de ATS antigos fazem é o seguinte. Dado um conjunto de dados que representa os requisitos de uma vaga e os dados do candidato, temos o seguinte algoritmo:
+
+${fence}python
+def extract_skills(data: list) -> set:
     """Recebe uma lista e retorna um set com apenas as skills únicas não repetidas"""
     return {skill.lower() for skill in data}
 
@@ -108,20 +93,54 @@ if __name__ == "__main__":
     print("--- Resultado da Triagem ATS ---")
     print(f"Match Obrigatório: {result['required_match']:.2f}%")
     print(f"Match Desejável: {result['nice_to_have_match']:.2f}%")
-    print(f"Score Final: {result['final_score']:.2f}%")`,
-      },
-      {
-        type: "paragraph",
-        text: "Esse código é uma versão simplória de um algoritmo de ATS. Como se pode ver, ele busca apenas a coincidência de palavras presentes nos dois lados — ou seja, se o candidato errar no texto, mesmo tendo experiência real com as habilidades exigidas pela vaga, ele acaba tendo um score baixo, porque a correspondência de palavras não olha o contexto, só a correspondência exata.",
-      },
-      {
-        type: "paragraph",
-        text: "Por exemplo: o algoritmo acima não entende, e nunca vai entender, que se uma vaga pede FastAPI e o candidato tem no currículo \"fastapi\" e \"python\", os dois fazem parte do mesmo ecossistema — o que acaba pesando negativamente contra o candidato.",
-      },
-    ],
+    print(f"Score Final: {result['final_score']:.2f}%")
+${fence}
+
+Esse código é uma versão simplória de um algoritmo de ATS. Como se pode ver, ele busca apenas a coincidência de palavras presentes nos dois lados — ou seja, se o candidato errar no texto, mesmo tendo experiência real com as habilidades exigidas pela vaga, ele acaba tendo um score baixo, porque a correspondência de palavras não olha o contexto, só a correspondência exata.
+
+Por exemplo: o algoritmo acima não entende, e nunca vai entender, que se uma vaga pede FastAPI e o candidato tem no currículo "fastapi" e "python", os dois fazem parte do mesmo ecossistema — o que acaba pesando negativamente contra o candidato.`;
+
+export const posts: Post[] = [
+  {
+    id: "ats-antigos",
+    title: "Por que os ATS antigos falham na triagem de candidatos",
+    description:
+      "Como os sistemas antigos de triagem de currículos (ATS) comparam texto de forma literal — e por que isso penaliza bons candidatos mesmo quando o histórico é compatível com a vaga.",
+    date: "2026-08-03",
+    author: "Eliseu Samulolo",
+    content: atsAntigosBody,
   },
 ];
 
 export function findPostById(post_id: string): Post | undefined {
   return posts.find((p) => p.id === post_id);
+}
+
+/**
+ * Parser bem simples de markdown: separa blocos de código cercados por ```
+ * (com linguagem opcional) de parágrafos de texto puro, sem trazer uma lib
+ * de markdown pro projeto só por causa disso.
+ */
+export function parseMarkdown(markdown: string): ContentBlock[] {
+  const blocks: ContentBlock[] = [];
+  const fenceRe = /```(\w+)?\n([\s\S]*?)```/g;
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  const pushParagraphs = (text: string) => {
+    text
+      .split(/\n{2,}/)
+      .map((paragraph) => paragraph.trim())
+      .filter(Boolean)
+      .forEach((paragraph) => blocks.push({ type: "paragraph", text: paragraph }));
+  };
+
+  while ((match = fenceRe.exec(markdown)) !== null) {
+    pushParagraphs(markdown.slice(lastIndex, match.index));
+    blocks.push({ type: "code", language: match[1], code: match[2].replace(/\n$/, "") });
+    lastIndex = fenceRe.lastIndex;
+  }
+  pushParagraphs(markdown.slice(lastIndex));
+
+  return blocks;
 }

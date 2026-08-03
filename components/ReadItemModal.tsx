@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from "react";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
-import type { ContentBlock } from "@/lib/posts";
+import { parseMarkdown } from "@/lib/posts";
 
 type Item = {
   title: string;
@@ -10,7 +10,7 @@ type Item = {
   date?: string;
   url?: string;
   author?: string;
-  content?: ContentBlock[];
+  content?: string;
 };
 
 type Props = {
@@ -112,9 +112,9 @@ export default function ReadItemModal({ onClick, isOpenModal, id, apiPath }: Pro
 
               <hr className="border-gray-100" />
 
-              {item.content && item.content.length > 0 ? (
+              {item.content ? (
                 <div className="flex flex-col gap-4">
-                  {item.content.map((block, index) =>
+                  {parseMarkdown(item.content).map((block, index) =>
                     block.type === "code" ? (
                       <pre
                         key={index}
