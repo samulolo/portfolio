@@ -1,12 +1,16 @@
 'use client'
 import { useEffect, useState } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowUpRight } from "lucide-react";
+import type { ContentBlock } from "@/lib/posts";
 
 type Item = {
   title: string;
   description: string;
   technologies?: string[];
   date?: string;
+  url?: string;
+  author?: string;
+  content?: ContentBlock[];
 };
 
 type Props = {
@@ -79,9 +83,12 @@ export default function ReadItemModal({ onClick, isOpenModal, id, apiPath }: Pro
 
           {!loading && !error && item && (
             <div className="flex flex-col gap-4">
-              {item.date && (
+              {(item.date || item.author) && (
                 <span className="text-xs text-gray-400 text-center">
-                  {new Date(item.date).toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric", timeZone: "UTC" })}
+                  {item.author}
+                  {item.author && item.date && " · "}
+                  {item.date &&
+                    new Date(item.date).toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric", timeZone: "UTC" })}
                 </span>
               )}
 
@@ -105,7 +112,37 @@ export default function ReadItemModal({ onClick, isOpenModal, id, apiPath }: Pro
 
               <hr className="border-gray-100" />
 
-              <p className="text-base text-gray-600 leading-relaxed">{item.description}</p>
+              {item.content && item.content.length > 0 ? (
+                <div className="flex flex-col gap-4">
+                  {item.content.map((block, index) =>
+                    block.type === "code" ? (
+                      <pre
+                        key={index}
+                        className="bg-gray-900 text-gray-100 text-xs leading-relaxed rounded-xl p-4 overflow-x-auto"
+                      >
+                        <code>{block.code}</code>
+                      </pre>
+                    ) : (
+                      <p key={index} className="text-base text-gray-600 leading-relaxed">
+                        {block.text}
+                      </p>
+                    )
+                  )}
+                </div>
+              ) : (
+                <p className="text-base text-gray-600 leading-relaxed">{item.description}</p>
+              )}
+
+              {item.url && (
+                <a
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 text-sm font-medium text-white bg-[#4169E1] px-4 py-3 rounded-xl"
+                >
+                  Visitar projeto <ArrowUpRight size={18} />
+                </a>
+              )}
             </div>
           )}
         </div>

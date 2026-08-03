@@ -15,11 +15,11 @@ export default function BlogPage(){
     }
 
     return (
-        <main className="">
+        <main className="max-w-5xl mx-auto w-full">
             <section>
                 <div className="bg-[#4169E1] px-4 py-8 flex flex-col gap-2 justify-center">
                     <h1 className="text-white text-2xl font-bold">Blog</h1>
-                    <p className="text-white/80">Here I share everything I'M learning</p>
+                    <p className="text-white/80">Here I share everything I am learning</p>
                     <p className="text-white/80">I hope you enjoy and feel free to give your opinion about </p>
                 </div>
             </section>

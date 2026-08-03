@@ -6,7 +6,7 @@ import Contacts from "@/components/landing/Contacts";
 
 export default function Home() {
   return (
-    <main className="">
+    <main className="max-w-5xl mx-auto w-full">
       <HeroSection/>
       <ProjectList/>
       <Contacts/>
